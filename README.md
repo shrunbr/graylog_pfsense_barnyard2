@@ -17,7 +17,9 @@ If you don't have those 3 running, you'll need to get them setup in your environ
 I call this the "pre-configuration" because it's what we need to do before we get into the real meat and potatoes of this. Follow the steps below to get Graylog ready to parse logs from Snort within pfSense.
 
 1. Create a new index set with the settings below
+
 	![Image of Barnyard2 index set](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/barnyard2_index_config.PNG)
+
 2. Download the `snort_barnyard2_graylog_content_pack.json` from this repository and go to **System -> Content Packs** click "Upload" in the top right and upload the JSON file.
 
 > This content pack will create the inputs, streams, pipelines, pipeline rules, lookup tables, lookup caches and lookup tables needed to properly parse the needed logs.
@@ -32,14 +34,19 @@ Now that you have the content pack installed to fully utilize it and get IP Geo-
 1. Go to [MaxMind](https://dev.maxmind.com/geoip/geoip2/geolite2/) and click **Sign Up For GeoLite2** at the bottom. 
 2. Create an account with MaxMind and sign in
 3. Once you're signed in, click "Download Databases"
-	[insert screenshot of MaxMind download link]
+
+	![Screenshot of Maxmind download](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/maxmind_download_databases.PNG)
+
 4. Click **Download GZIP** next to **GeoLite2 City** (DO NOT DOWNLOAD THE CSV FORMAT)
-	[insert screenshot of GeoLite2 City download]
+
+	![Screenshot of GeoLite2 City download](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/maxmind_geolite2_download.PNG)
+
 5. Extract the zip file and place the `GeoLite2-City.mmdb` file in **/etc/graylog/server/** on your graylog server.
 6. In Graylog go to **System -> Configurations** and click **Update** under **Geo-Location Processor**
 7. Set `/etc/graylog/server/GeoLite2-City.mmdb` as the path and choose **City Database** as the type and click **Save**
 8. Scroll to the top and click **Update** under **Message Processors Configuration** and change the order to what is below
-	[inset screenshot of message processors configuration]
+
+	![Screenshot of message processors configuration](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/graylog_message_processors_configuration.PNG)
 
 ## Elasticsearch Configuration
 
@@ -59,7 +66,7 @@ Now that you're in Cerebro we need to create an index template. Go to `More -> I
 
 Now that we've created the template we need to stop the Graylog service by running `systemctl stop graylog-server` on your Graylog server. Once that is stopped we need to delete the `barnyard_0` index visible under **Overview** in Cerebro.
 
-[Insert image of sub-menu on barnyard_0 index]
+    ![Image of sub-menu on barnyard_0 index](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/cerebro_delete_barnyard_0.PNG)
 
 Now that it is deleted we can start graylog-server again using `systemctl start graylog-server`. 
 
@@ -75,9 +82,13 @@ Okay, we have Graylog completely configured. The last step is to now pipe logs f
 6. Set the remote host to your Graylog server IP and set the port to 10001 (Barnyard2 Graylog Input Port)
 7. Click `Save` at the bottom
 
+    ![Screenshot of Snort Syslog Config](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/snort_pfsense_logging_configuration.PNG)
+
 ## Confirm Logging
 
 We now need to confirm that Graylog is receiving all the logs for Snort. We can do this by going to **Streams -> Snort Barnyard2 Logs** and making sure we're receiving messages. If you click into a message you should see variables such as `src_addr`, `src_addr_geo_location`, `dst_addr`, `dst_addr_geo_location`, etc. 
+
+    ![Screenshot of Graylog Message Example](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/graylog_snort_message_example.PNG)
 
 ## Grafana Configuration
 
@@ -88,7 +99,7 @@ Now that we have logs within Graylog for Snort and we're receiving Geo Location 
 
 First things first, we need to add Graylog as a source to Grafana. We can do this by adding a new Elasticsearch data source and configuring it like the image below. In the `URL` box put https://X.X.X.X:9200 (replace X.X.X.X with the IP of your Graylog/Elasticsearch server).
 
-[insert image of snort data source in Grafana]
+    ![Screenshot of Grafana Datasource Config](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/grafana_elasticsearch_datasource.PNG)
 
 Now that we have our data source we can import the `snort_grafana_dashboard.json` file in this repository to Grafana. This will give you a very basic starting dashboard for Snort that shows an Incoming connection map, top city, top country, top source ip, top classification, top attack and top destination port. 
 
@@ -99,5 +110,7 @@ To import the dashboard:
 4. Click **Load**
 
 You have now uploaded the dashboard but you'll need to edit each panel to target the newly created Elasticsearch data source. Once you've changed the data source for each panel you should be off to the races!
+
+    ![Screenshot of Grafana Snort Dashboard](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/grafana_snort_dashboard.PNG)
 
 Enjoy your new parsed Snort logs and Grafana dashboard!
