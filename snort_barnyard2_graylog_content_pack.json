@@ -1,0 +1,419 @@
+{
+    "v": 1,
+    "id": "84e6fc57-9d52-407d-aad9-707a58ef9a89",
+    "rev": 1,
+    "name": "Snort Barnyard2 Content Pack",
+    "summary": "A content pack for parsing Snort Barnyard2 Logs from pfSense",
+    "description": "",
+    "vendor": "shrunbr / cthulhu@cthu.io",
+    "url": "https://github.com/shrunbr/graylog_pfsense_barnyard2",
+    "parameters": [],
+    "entities": [
+      {
+        "v": "1",
+        "type": {
+          "name": "lookup_adapter",
+          "version": "1"
+        },
+        "id": "b06e87da-9579-4187-a3d2-2e7d458c720c",
+        "data": {
+          "name": {
+            "@type": "string",
+            "@value": "geolite2-city-db"
+          },
+          "title": {
+            "@type": "string",
+            "@value": "GeoLite2 City DB"
+          },
+          "description": {
+            "@type": "string",
+            "@value": "Maxmind GeoLite2 City DB"
+          },
+          "configuration": {
+            "type": {
+              "@type": "string",
+              "@value": "maxmind_geoip"
+            },
+            "path": {
+              "@type": "string",
+              "@value": "/etc/graylog/server/GeoLite2-City.mmdb"
+            },
+            "database_type": {
+              "@type": "string",
+              "@value": "MAXMIND_CITY"
+            },
+            "check_interval": {
+              "@type": "long",
+              "@value": 1
+            },
+            "check_interval_unit": {
+              "@type": "string",
+              "@value": "MINUTES"
+            }
+          }
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.2.4+a407287"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "pipeline",
+          "version": "1"
+        },
+        "id": "5e79893f-6cda-4c64-9127-9c298cf2fe1d",
+        "data": {
+          "title": {
+            "@type": "string",
+            "@value": "Snort Barnyard2 Logs"
+          },
+          "description": {
+            "@type": "string",
+            "@value": ""
+          },
+          "source": {
+            "@type": "string",
+            "@value": "pipeline \"Snort Barnyard2 Logs\"\nstage 0 match either\nrule \"Extract Snort Barnyard2 alert fields\"\nstage 1 match either\nrule \"GeoIP lookup: src_addr\"\nrule \"timestamp_pfsense_for_grafana\"\nend"
+          },
+          "connected_streams": [
+            {
+              "@type": "string",
+              "@value": "1b25dbc3-b132-4a8c-a782-f4d3e11b6259"
+            }
+          ]
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.2.4+a407287"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "pipeline_rule",
+          "version": "1"
+        },
+        "id": "a963d0f9-8fab-4aa6-a922-4bacfb7a7b4d",
+        "data": {
+          "title": {
+            "@type": "string",
+            "@value": "timestamp_pfsense_for_grafana"
+          },
+          "description": {
+            "@type": "string",
+            "@value": "timestamp_pfsense_for_grafana"
+          },
+          "source": {
+            "@type": "string",
+            "@value": "rule \"timestamp_pfsense_for_grafana\"\nwhen\n has_field(\"timestamp\")\nthen\n // the following date format assumes there's no time zone in the string\n let source_timestamp = parse_date(substring(to_string(now(\"America/Chicago\")),0,23), \"yyyy-MM-dd'T'HH:mm:ss.SSS\");\n let dest_timestamp = format_date(source_timestamp,\"yyyy-MM-dd HH:mm:ss\");\n set_field(\"real_timestamp\", dest_timestamp);\nend"
+          }
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.2.4+a407287"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "stream",
+          "version": "1"
+        },
+        "id": "1b25dbc3-b132-4a8c-a782-f4d3e11b6259",
+        "data": {
+          "alarm_callbacks": [],
+          "outputs": [],
+          "remove_matches": {
+            "@type": "boolean",
+            "@value": true
+          },
+          "title": {
+            "@type": "string",
+            "@value": "Snort Barnyard2 Logs"
+          },
+          "stream_rules": [
+            {
+              "type": {
+                "@type": "string",
+                "@value": "EXACT"
+              },
+              "field": {
+                "@type": "string",
+                "@value": "barnyard2_log"
+              },
+              "value": {
+                "@type": "string",
+                "@value": "true"
+              },
+              "inverted": {
+                "@type": "boolean",
+                "@value": false
+              },
+              "description": {
+                "@type": "string",
+                "@value": ""
+              }
+            }
+          ],
+          "alert_conditions": [],
+          "matching_type": {
+            "@type": "string",
+            "@value": "OR"
+          },
+          "disabled": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "description": {
+            "@type": "string",
+            "@value": "Logs from Barnyard2"
+          },
+          "default_stream": {
+            "@type": "boolean",
+            "@value": false
+          }
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.2.4+a407287"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "lookup_cache",
+          "version": "1"
+        },
+        "id": "b875fe9d-69ca-4ea6-a28d-319d0609eb4d",
+        "data": {
+          "name": {
+            "@type": "string",
+            "@value": "geoip"
+          },
+          "title": {
+            "@type": "string",
+            "@value": "GeoIP"
+          },
+          "description": {
+            "@type": "string",
+            "@value": "GeoIP Cache"
+          },
+          "configuration": {
+            "type": {
+              "@type": "string",
+              "@value": "guava_cache"
+            },
+            "max_size": {
+              "@type": "integer",
+              "@value": 1000
+            },
+            "expire_after_access": {
+              "@type": "long",
+              "@value": 1
+            },
+            "expire_after_access_unit": {
+              "@type": "string",
+              "@value": "HOURS"
+            },
+            "expire_after_write": {
+              "@type": "long",
+              "@value": 0
+            }
+          }
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.2.4+a407287"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "lookup_table",
+          "version": "1"
+        },
+        "id": "8ffbeaeb-8df5-42ea-9709-27478b336b46",
+        "data": {
+          "default_single_value_type": {
+            "@type": "string",
+            "@value": "NULL"
+          },
+          "cache_name": {
+            "@type": "string",
+            "@value": "b875fe9d-69ca-4ea6-a28d-319d0609eb4d"
+          },
+          "name": {
+            "@type": "string",
+            "@value": "geoip"
+          },
+          "default_multi_value_type": {
+            "@type": "string",
+            "@value": "NULL"
+          },
+          "default_multi_value": {
+            "@type": "string",
+            "@value": ""
+          },
+          "data_adapter_name": {
+            "@type": "string",
+            "@value": "b06e87da-9579-4187-a3d2-2e7d458c720c"
+          },
+          "title": {
+            "@type": "string",
+            "@value": "GeoIP"
+          },
+          "default_single_value": {
+            "@type": "string",
+            "@value": ""
+          },
+          "description": {
+            "@type": "string",
+            "@value": "GeoIP Lookup Table"
+          }
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.2.4+a407287"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "input",
+          "version": "1"
+        },
+        "id": "8216e530-9ef4-4acd-af60-92fc33daf60b",
+        "data": {
+          "title": {
+            "@type": "string",
+            "@value": "Snort-Barnyard"
+          },
+          "configuration": {
+            "expand_structured_data": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "recv_buffer_size": {
+              "@type": "integer",
+              "@value": 262144
+            },
+            "port": {
+              "@type": "integer",
+              "@value": 10001
+            },
+            "number_worker_threads": {
+              "@type": "integer",
+              "@value": 4
+            },
+            "force_rdns": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "allow_override_date": {
+              "@type": "boolean",
+              "@value": true
+            },
+            "bind_address": {
+              "@type": "string",
+              "@value": "0.0.0.0"
+            },
+            "store_full_message": {
+              "@type": "boolean",
+              "@value": false
+            }
+          },
+          "static_fields": {
+            "barnyard2_log": {
+              "@type": "string",
+              "@value": "true"
+            }
+          },
+          "type": {
+            "@type": "string",
+            "@value": "org.graylog2.inputs.syslog.udp.SyslogUDPInput"
+          },
+          "global": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "extractors": []
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.2.4+a407287"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "pipeline_rule",
+          "version": "1"
+        },
+        "id": "4ee0c8cd-8f01-476d-8c8f-d861276d33e9",
+        "data": {
+          "title": {
+            "@type": "string",
+            "@value": "Extract Snort Barnyard2 alert fields"
+          },
+          "description": {
+            "@type": "string",
+            "@value": ""
+          },
+          "source": {
+            "@type": "string",
+            "@value": "rule \"Extract Snort Barnyard2 alert fields\"\nwhen\nhas_field(\"message\")\nthen\nlet m = regex(\"\\\\s?\\\\[(\\\\d+):(\\\\d+):(\\\\d+)\\\\] (.+?) \\\\[Classification: (.+?)\\\\] \\\\[Priority: (\\\\d+)]: \\\\<(.+?)\\\\> \\\\{(.+?)\\\\} (\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3})(:(\\\\d{1,5}))? -> (\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3})(:(\\\\d{1,5}))?\\\\R?\", to_string($message.message));\n\nset_field(\"snort_alert\", true);\nset_field(\"generator_id\", m[\"0\"]);\nset_field(\"signature_id\", m[\"1\"]);\nset_field(\"signature_revision_id\", m[\"2\"]);\nset_field(\"description\", m[\"3\"]);\nset_field(\"classification\", m[\"4\"]);\nset_field(\"priority\", to_long(m[\"5\"]));\nset_field(\"interface\", m[\"6\"]);\nset_field(\"protocol\", m[\"7\"]);\nset_field(\"src_addr\", m[\"8\"]);\nset_field(\"src_port\", to_long(m[\"10\"]));\nset_field(\"dst_addr\", m[\"11\"]);\nset_field(\"dst_port\", to_long(m[\"13\"]));\nend"
+          }
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.2.4+a407287"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "pipeline_rule",
+          "version": "1"
+        },
+        "id": "37d4bc79-f2c6-45a6-96d0-7c1cca02f001",
+        "data": {
+          "title": {
+            "@type": "string",
+            "@value": "GeoIP lookup: src_addr"
+          },
+          "description": {
+            "@type": "string",
+            "@value": "For Snort Barnyard2"
+          },
+          "source": {
+            "@type": "string",
+            "@value": "rule \"GeoIP lookup: src_addr\"\nwhen\n   has_field(\"src_addr\")\nthen\n let geo = lookup(\"geoip\", to_string($message.src_addr));\n \n set_field(\"src_addr_geo_location\", geo[\"coordinates\"]);\n set_field(\"src_addr_geo_country\", geo[\"country\"].iso_code);\n set_field(\"src_addr_geo_city\", geo[\"city\"].names.en);\nend"
+          }
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.2.4+a407287"
+          }
+        ]
+      }
+    ]
+  }

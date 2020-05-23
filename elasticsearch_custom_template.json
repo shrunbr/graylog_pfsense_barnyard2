@@ -1,0 +1,175 @@
+{
+    "order": -1,
+    "template": "barnyard_*",
+    "settings": {
+      "index": {
+        "analysis": {
+          "analyzer": {
+            "analyzer_keyword": {
+              "filter": "lowercase",
+              "tokenizer": "keyword"
+            }
+          }
+        },
+        "max_result_window": "1000000"
+      }
+    },
+    "mappings": {
+      "message": {
+        "properties": {
+            "barnyard2_log": { 
+              "type": "keyword"
+            },
+            "classification": {
+              "type": "keyword"
+            },
+            "description": { 
+              "type": "keyword"
+            },
+            "dst_addr": {
+              "type": "keyword"
+            },
+            "dst_addr_city_name": {
+              "type": "keyword"
+            },
+            "dst_addr_country_code": {
+              "type": "keyword"
+            },
+            "dst_addr_geolocation": {
+              "type": "keyword"
+            },
+            "dst_port": {
+              "type": "long"
+            },
+            "facility": {
+              "type": "keyword"
+            },
+            "full_message": {
+              "type": "text",
+              "analyzer": "standard"
+            },
+            "generator_id": {
+              "type": "keyword"
+            },
+            "gl2_accounted_message_size": {
+              "type": "long"
+            },
+            "gl2_message_id": {
+              "type": "keyword"
+            },
+            "gl2_processing_error": {
+              "type": "keyword"
+            },
+            "gl2_processing_timestamp": {
+              "type": "date",
+              "format": "yyyy-MM-dd HH:mm:ss.SSS"
+            },
+            "gl2_receive_timestamp": {
+              "type": "date",
+              "format": "yyyy-MM-dd HH:mm:ss.SSS"
+            },
+            "gl2_remote_ip": {
+              "type": "keyword"
+            },
+            "gl2_remote_port": {
+              "type": "long"
+            },
+            "gl2_source_input": {
+              "type": "keyword"
+            },
+            "gl2_source_node": {
+              "type": "keyword"
+            },
+            "interface": {
+              "type": "keyword"
+            },
+            "level": {
+              "type": "long"
+            },
+            "message": {
+              "type": "text",
+              "analyzer": "standard"
+            },
+            "pfsense": {
+              "type": "keyword"
+            },
+            "priority": {
+              "type": "long"
+            },
+            "protocol": {
+              "type": "keyword"
+            },
+            "real_timestamp": {
+              "type": "keyword"
+            },
+            "signature_id": {
+              "type": "keyword"
+            },
+            "signature_revision_id": {
+              "type": "keyword"
+            },
+            "snort_alert": {
+              "type": "boolean"
+            },
+            "source": {
+              "type": "text",
+              "analyzer": "analyzer_keyword",
+              "fielddata": true
+            },
+            "src_addr": {
+              "type": "keyword"
+            },
+            "src_addr_city_name": {
+              "type": "keyword"
+            },
+            "src_addr_country_code": {
+              "type": "keyword"
+            },
+            "src_addr_geo_city": {
+              "type": "keyword"
+            },
+            "src_addr_geo_country": {
+              "type": "keyword"
+            },
+            "src_addr_geo_location": {
+              "type": "keyword"
+            },
+            "src_addr_geolocation": {
+              "type": "keyword"
+            },
+            "src_port": {
+              "type": "long"
+            },
+            "streams": {
+              "type": "keyword"
+            },
+            "timestamp": {
+              "type": "date",
+              "format": "yyyy-MM-dd HH:mm:ss.SSS"
+        }
+        },
+        "dynamic_templates": [
+          {
+            "internal_fields": {
+              "match": "gl2_*",
+              "mapping": {
+                "type": "keyword"
+              }
+            }
+          },
+          {
+            "store_generic": {
+              "match": "*",
+              "mapping": {
+                "index": "true"
+              }
+            }
+          }
+        ],
+        "_source": {
+          "enabled": true
+        }
+      }
+    },
+    "aliases": {}
+  }
