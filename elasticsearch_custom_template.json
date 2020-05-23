@@ -36,7 +36,7 @@
               "type": "keyword"
             },
             "dst_addr_geolocation": {
-              "type": "keyword"
+              "type": "geo_point"
             },
             "dst_port": {
               "type": "long"
@@ -132,7 +132,7 @@
               "type": "keyword"
             },
             "src_addr_geo_location": {
-              "type": "keyword"
+              "type": "geo_point"
             },
             "src_addr_geolocation": {
               "type": "keyword"
