@@ -7,7 +7,7 @@ Using this guide we are able to take logs generated from Snort Barnyard2 (within
 ## Prerequisites
 
  1. pfSense with Snort running
- 2. Graylog (Version 3.0.0+)
+ 2. Graylog (Version 3.2.0+)
  3. Grafana (Optional, but recommended, see Grafana section for requirements)
 
 If you don't have those 3 running, you'll need to get them setup in your environment before continuing.
@@ -23,7 +23,7 @@ I call this the "pre-configuration" because it's what we need to do before we ge
 2. Download the `snort_barnyard2_graylog_content_pack.json` from this repository and go to **System -> Content Packs** click "Upload" in the top right and upload the JSON file.
 
 > This content pack will create the inputs, streams, pipelines, pipeline rules, lookup tables, lookup caches and lookup tables needed to properly parse the needed logs.
-3. Go to **Streams** and edit the `Snort Barnyard2 Logs` stream and check `Remove matches from ‘All messages’ stream`. That way we aren't capturing and storing message twice.
+3. Go to **Streams** and edit the `Snort Barnyard2 Logs` stream, check `Remove matches from ‘All messages’ stream` and set the index set to the one you just created. We check `Remove matches from ‘All messages’ stream` so that we don't store messages twice and we set the index set so it works with our pipelines.
 
 Awesome, Graylog is now "pre-configured" for what we need to do. Lets move onto the next section.
 
