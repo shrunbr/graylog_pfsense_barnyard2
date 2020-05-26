@@ -31,24 +31,26 @@ Awesome, Graylog is now "pre-configured" for what we need to do. Lets move onto 
 
 ## GeoLite2 DB Installation
 
-Now that you have the content pack installed to fully utilize it and get IP Geo-location you'll need to download the MaxMind GeoLite2 Database (MMDB format) and place the file on your Graylog server.
 
-1. Go to [MaxMind](https://dev.maxmind.com/geoip/geoip2/geolite2/) and click **Sign Up For GeoLite2** at the bottom. 
+Now that you have the content pack installed to fully utilize it and get IP Geo-location you'll need to download the MaxMind GeoLite2 Database (MMDB format) and place the file on your Graylog server.
+1. Go to [MaxMind](https://dev.maxmind.com/geoip/geoip2/geolite2/) and click **Sign Up For GeoLite2** at the bottom.
 2. Create an account with MaxMind and sign in
 3. Once you're signed in, click "Download Databases"
 
-	![Screenshot of Maxmind download](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/maxmind_download_databases.PNG)
+![Screenshot of Maxmind download](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/maxmind_download_databases.PNG)
 
 4. Click **Download GZIP** next to **GeoLite2 City** (DO NOT DOWNLOAD THE CSV FORMAT)
 
-	![Screenshot of GeoLite2 City download](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/maxmind_geolite2_download.PNG)
+![Screenshot of GeoLite2 City download](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/maxmind_geolite2_download.PNG)
 
 5. Extract the zip file and place the `GeoLite2-City.mmdb` file in **/etc/graylog/server/** on your graylog server.
+	> Note: You may need to chmod `GeoLite2-City.mmdb` to 744 and chown the file to whoever owns the rest of the files in that directory for your install
 6. In Graylog go to **System -> Configurations** and click **Update** under **Geo-Location Processor**
 7. Set `/etc/graylog/server/GeoLite2-City.mmdb` as the path and choose **City Database** as the type and click **Save**
 8. Scroll to the top and click **Update** under **Message Processors Configuration** and change the order to what is below
 
-	![Screenshot of message processors configuration](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/graylog_message_processors_configuration.PNG)
+![Screenshot of message processors configuration](https://github.com/shrunbr/graylog_pfsense_barnyard2/blob/master/screenshots/graylog_message_processors_configuration.PNG)
+
 
 ## Elasticsearch Configuration
 
