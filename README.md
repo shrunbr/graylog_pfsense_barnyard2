@@ -6,11 +6,12 @@ Using this guide we are able to take logs generated from Snort Barnyard2 (within
 
 ## Prerequisites
 
- 1. pfSense with Snort running
- 2. Graylog (Version 3.2.0+)
- 3. Grafana (Optional, but recommended, see Grafana section for requirements)
-
+1. pfSense with Snort running
+2. Graylog (Version 3.2.0+)
+3. Grafana (Optional, but recommended, see Grafana section for requirements)
+ 
 If you don't have those 3 running, you'll need to get them setup in your environment before continuing.
+Note: *If you're running a separate elasticsearch backend other than what Graylog uses you cannot run the OSS version with this.*
 
 ## Graylog Pre-Configuration
 
